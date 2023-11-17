@@ -1,10 +1,14 @@
 import { kv } from "@vercel/kv";
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: Request, res: Response) {
-  const npmVersion = await kv.get("npmVersion");
-  const staticfileCDN = await kv.get("staticfileCDN");
-  const bootCDN = await kv.get("bootCDN");
+  const [npmVersion, staticfileCDN, bootCDN] = await Promise.all([
+    kv.get("npmVersion"),
+    kv.get("staticfileCDN"),
+    kv.get("bootCDN"),
+  ]);
 
   return NextResponse.json({
     npmVersion,
