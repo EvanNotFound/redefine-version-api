@@ -2,7 +2,8 @@
   "crons": [
     {
       "path": "/api/refresh",
-      "schedule": "*/3 * * * *"
+      "schedule": "*/3 * * * *",
+      "method": "post"
     }
   ]
 }
