@@ -25,5 +25,13 @@ export async function GET(req: Request, res: Response) {
       cdnjsCDN,
     },
     message: "Successfully fetched redefine version info.",
+
+    //legacy
+    npmVersion,
+    staticfileCDN,
+    bootCDN,
+    zstaticCDN,
+    sustechCDN,
+    cdnjsCDN,
   });
 }
