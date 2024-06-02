@@ -8,7 +8,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const [
       staticfileCDNResult,
       bootCDNResult,
-      zstaticsCDNResult,
+      zstaticCDNResult,
       sustechCDNResult,
       cdnjsCDNResult,
     ] = await Promise.all([
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       kv.set("npmVersion", npmVersion),
       kv.set("staticfileCDN", staticfileCDNResult),
       kv.set("bootCDN", bootCDNResult),
-      kv.set("zstaticsCDN", zstaticsCDNResult),
+      kv.set("zstaticCDN", zstaticCDNResult),
       kv.set("sustechCDN", sustechCDNResult),
       kv.set("cdnjsCDN", cdnjsCDNResult),
     ]);
@@ -50,7 +50,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         npmVersion,
         staticfileCDN: staticfileCDNResult,
         bootCDN: bootCDNResult,
-        zstaticsCDN: zstaticsCDNResult,
+        zstaticCDN: zstaticCDNResult,
         sustechCDN: sustechCDNResult,
         cdnjsCDN: cdnjsCDNResult,
       },
