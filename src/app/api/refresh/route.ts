@@ -5,10 +5,31 @@ export async function POST(req: NextRequest, res: NextResponse) {
   try {
     const npmVersion = await fetchNPMVersion();
 
-    const [staticfileCDNResult, bootCDNResult] = await Promise.all([
-      testCDN("https://cdn.staticfile.org/hexo-theme-redefine", npmVersion),
+    const [
+      staticfileCDNResult,
+      bootCDNResult,
+      zstaticsCDNResult,
+      sustechCDNResult,
+      cdnjsCDNResult,
+    ] = await Promise.all([
       testCDN(
-        "https://cdn.bootcdn.net/ajax/libs/hexo-theme-redefine",
+        "https://cdn.staticfile.org/hexo-theme-redefine/{version}/js/main.js",
+        npmVersion,
+      ),
+      testCDN(
+        "https://cdn.bootcdn.net/ajax/libs/hexo-theme-redefine/{version}/js/main.js",
+        npmVersion,
+      ),
+      testCDN(
+        "https://s4.zstatic.net/npm/hexo-theme-redefine@{version}/source/js/main.js",
+        npmVersion,
+      ),
+      testCDN(
+        "https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/hexo-theme-redefine/{version}/js/main.js",
+        npmVersion,
+      ),
+      testCDN(
+        "https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-redefine/{version}/js/main.js",
         npmVersion,
       ),
     ]);
@@ -17,16 +38,30 @@ export async function POST(req: NextRequest, res: NextResponse) {
       kv.set("npmVersion", npmVersion),
       kv.set("staticfileCDN", staticfileCDNResult),
       kv.set("bootCDN", bootCDNResult),
+      kv.set("zstaticsCDN", zstaticsCDNResult),
+      kv.set("sustechCDN", sustechCDNResult),
+      kv.set("cdnjsCDN", cdnjsCDNResult),
     ]);
 
     return NextResponse.json({
-      npmVersion,
-      staticfileCDN: staticfileCDNResult,
-      bootCDN: bootCDNResult,
+      status: "success",
+      message: "Refreshed successfully",
+      data: {
+        npmVersion,
+        staticfileCDN: staticfileCDNResult,
+        bootCDN: bootCDNResult,
+        zstaticsCDN: zstaticsCDNResult,
+        sustechCDN: sustechCDNResult,
+        cdnjsCDN: cdnjsCDNResult,
+      },
     });
-  } catch (error) {
+  } catch (error: any) {
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      {
+        status: "error",
+        message: "Error refreshing",
+        error: error.message,
+      },
       { status: 500 },
     );
   }
@@ -41,13 +76,21 @@ const fetchNPMVersion = async () => {
 };
 
 const testCDN = async (baseUrl: string, version: string) => {
-  const url = `${baseUrl}/${version}/js/main.js`;
+  const url = baseUrl.replace("{version}", version);
+
   const response = await fetch(url, { method: "HEAD" });
   return response.ok;
 };
 
 export async function GET(req: NextRequest) {
-  return new NextResponse(JSON.stringify({ message: "Method Not Allowed" }), {
-    status: 405,
-  });
+  return new NextResponse(
+    JSON.stringify({
+      status: "error",
+      message: "Method Not Allowed",
+      error: "Method Not Allowed",
+    }),
+    {
+      status: 405,
+    },
+  );
 }
