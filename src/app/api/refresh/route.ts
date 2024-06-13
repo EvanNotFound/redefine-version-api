@@ -77,9 +77,22 @@ const fetchNPMVersion = async () => {
 
 const testCDN = async (baseUrl: string, version: string) => {
   const url = baseUrl.replace("{version}", version);
+  let attempts = 0;
+  let success = false;
 
-  const response = await fetch(url, { method: "HEAD" });
-  return response.ok;
+  while (attempts < 3 && !success) {
+    attempts++;
+    try {
+      const response = await fetch(url, { method: "HEAD" });
+      if (response.ok) {
+        success = true;
+      }
+    } catch (error) {
+      // Handle fetch error if needed
+    }
+  }
+
+  return success;
 };
 
 export async function GET(req: NextRequest) {
