@@ -11,6 +11,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       zstaticCDNResult,
       sustechCDNResult,
       cdnjsCDNResult,
+      npmMirrorCDNResult,
     ] = await Promise.all([
       testCDN(
         "https://cdn.staticfile.org/hexo-theme-redefine/{version}/js/main.js",
@@ -32,6 +33,10 @@ export async function POST(req: NextRequest, res: NextResponse) {
         "https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-redefine/{version}/js/main.js",
         npmVersion,
       ),
+      testCDN(
+        "https://registry.npmmirror.com/hexo-theme-redefine/{version}/files/source/js/main.js",
+        npmVersion,
+      ),
     ]);
 
     await Promise.all([
@@ -41,6 +46,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       kv.set("zstaticCDN", zstaticCDNResult),
       kv.set("sustechCDN", sustechCDNResult),
       kv.set("cdnjsCDN", cdnjsCDNResult),
+      kv.set("npmMirrorCDN", npmMirrorCDNResult),
     ]);
 
     return NextResponse.json({
@@ -53,6 +59,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         zstaticCDN: zstaticCDNResult,
         sustechCDN: sustechCDNResult,
         cdnjsCDN: cdnjsCDNResult,
+        npmMirrorCDN: npmMirrorCDNResult,
       },
     });
   } catch (error: any) {
