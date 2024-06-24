@@ -22,7 +22,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         npmVersion,
       ),
       testCDN(
-        "https://s4.zstatic.net/npm/hexo-theme-redefine@{version}/source/js/main.js",
+        "https://s4.zstatic.net/ajax/libs/hexo-theme-redefine/{version}/js/main.js",
         npmVersion,
       ),
       testCDN(
